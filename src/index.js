@@ -3,8 +3,13 @@ const fastify   = require('fastify')({ logger: true })
     , config    = require('config')
     , appconfig = config.get('app')
     , dbconfig  = config.get('db')
-    , mongoose = require('mongoose')
-    , routes = require('./routes')
+    , mongoose  = require('mongoose')
+    , routes    = require('./routes')
+    , swagger   = require('../config/swagger')
+
+
+// Register Swagger
+fastify.register(require('fastify-swagger'), swagger.options)
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/' + dbconfig.name)
@@ -20,6 +25,7 @@ mongoose.connect('mongodb://localhost/' + dbconfig.name)
 const start = async () => {
   try {
     await fastify.listen(appconfig.port)
+    fastify.swagger()
     fastify.log.info(`server listening on ${fastify.server.address().port}`)
   } catch (err) {
     fastify.log.error(err)
