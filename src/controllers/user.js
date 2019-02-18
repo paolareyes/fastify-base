@@ -1,6 +1,6 @@
 // External Dependancies
 const boom    = require('boom')
-    , User    = require('../models/User')
+    , User    = require('../models/user')
     , fastify = require('fastify')({ logger: true })
 
 // Get all users
@@ -42,22 +42,22 @@ exports.create = async (req, reply) => {
 
 // Add default admin
 exports.default = async (req, reply) => {
+  var adminUser = new User({
+    firstname   : 'Administrador',
+    lastname    : 'A',
+    email       : 'admin@admin.com',
+    password    : 'Test.1234',
+    role        : 0
+  })
+
   try {
-    user = new User({
-      firstname   : 'Administrador',
-      lastname    : 'A',
-      email       : 'admin@admin.com',
-      password    : 'Test.1234',
-      role        : 0
-    })
-    user.generateHash((err,result) => {
-      if (err) {
-        fastify.log.error('not able to hash password', err);
-        throw boom.boomify(err)
-      } else if(result) {
-        return user.save()
+    adminUser.generateHash((err,result) => {
+    if (err) {
+      fastify.log.error('not able to hash password', err);
+      throw boom.boomify(err)
       }
     })
+    return adminUser.save()
   } catch (err) {
     throw boom.boomify(err)
   }
