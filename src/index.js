@@ -4,22 +4,37 @@ const fastify   = require('fastify')({ logger: true })
     , appconfig = config.get('app')
     , dbconfig  = config.get('db')
     , mongoose  = require('mongoose')
-    , routes    = require('./routes')
     , swagger   = require('../config/swagger')
+    , customJwtAuth = require('./plugin/auth')
 
-
+fastify.register(require('fastify-jwt'), {
+        secret: 'ts.2019'
+      })
 // Register Swagger
-fastify.register(require('fastify-swagger'), swagger.options)
+      .register(require('fastify-swagger'), swagger.options)
+      .register(require('fastify-auth'))
+      .register(customJwtAuth)
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/' + dbconfig.name)
  .then(() => console.log('MongoDB connected to ' + dbconfig.name))
  .catch(err => console.log(err))
 
- // Loop over each route
- routes.forEach((route, index) => {
-   fastify.route(route)
- })
+
+ //Register routes
+ fastify.register(
+  require('./routes/user.js'),
+  { prefix: '/api' }
+)
+/*
+fastify.get('/signup', (req, reply) => {
+  // authenticate the user.. are valid the credentials?
+  const token = fastify.jwt.sign({ hello: 'world' })
+  reply.send({ token })
+})
+fastify.get('/', (req, reply) => {
+  reply.send("Holi")
+})*/
 
 // Run the server!
 const start = async () => {
