@@ -58,7 +58,8 @@ module.exports = function (fastify, opts, next) {
   fastify.route({
     method: 'GET',
     url: '/users/default',
-    handler: userController.default
+    handler: userController.default,
+    schema: documentation.defaultSchema
   })
 
 

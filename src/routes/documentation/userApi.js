@@ -153,3 +153,6 @@ exports.deleteUserSchema = {
     }
   }
 }
+exports.defaultSchema = {
+  hide: true
+}
