@@ -8,7 +8,6 @@ async function customJwtAuth(fastify, opts) {
     try {
       console.log('try');
       req.user = await fastify.jwt.verify(req.headers.authorization)
-      console.log(req.user)
       done()
     } catch (err) {
       console.log('catch');

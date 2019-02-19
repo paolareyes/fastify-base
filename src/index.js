@@ -11,9 +11,9 @@ fastify.register(require('fastify-jwt'), {
         secret: 'ts.2019'
       })
 // Register Swagger
-      .register(require('fastify-swagger'), swagger.options)
-      .register(require('fastify-auth'))
-      .register(customJwtAuth)
+       .register(require('fastify-swagger'), swagger.options)
+       .register(require('fastify-auth'))
+       .register(customJwtAuth)
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/' + dbconfig.name)
@@ -23,18 +23,13 @@ mongoose.connect('mongodb://localhost/' + dbconfig.name)
 
  //Register routes
  fastify.register(
-  require('./routes/user.js'),
+  require('./routes/user'),
   { prefix: '/api' }
 )
-/*
-fastify.get('/signup', (req, reply) => {
-  // authenticate the user.. are valid the credentials?
-  const token = fastify.jwt.sign({ hello: 'world' })
-  reply.send({ token })
-})
-fastify.get('/', (req, reply) => {
-  reply.send("Holi")
-})*/
+        .register(
+ require('./routes/auth'),
+ { prefix: '/api' }
+)
 
 // Run the server!
 const start = async () => {
