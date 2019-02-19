@@ -1,4 +1,8 @@
+//import controllers
 const userController = require('../controllers/user')
+
+// Import Swagger documentation
+      documentation = require('./documentation/userApi')
 
 module.exports = function (fastify, opts, next) {
   fastify.route({
@@ -7,7 +11,8 @@ module.exports = function (fastify, opts, next) {
     beforeHandler: fastify.auth([
       fastify.authenticate
     ]),
-    handler: userController.get
+    handler: userController.get,
+    schema: documentation.getUsersSchema
   })
 
   fastify.route({
@@ -16,7 +21,8 @@ module.exports = function (fastify, opts, next) {
     beforeHandler: fastify.auth([
       fastify.authenticate
     ]),
-    handler: userController.getById
+    handler: userController.getById,
+    schema: documentation.getUserSchema
   })
 
   fastify.route({
@@ -25,7 +31,8 @@ module.exports = function (fastify, opts, next) {
     beforeHandler: fastify.auth([
       fastify.authenticate
     ]),
-    handler: userController.create
+    handler: userController.create,
+    schema: documentation.createUserSchema
   })
 
   fastify.route({
@@ -34,7 +41,8 @@ module.exports = function (fastify, opts, next) {
     beforeHandler: fastify.auth([
       fastify.authenticate
     ]),
-    handler: userController.update
+    handler: userController.update,
+    schema: documentation.updateUserSchema
   })
 
   fastify.route({
@@ -43,7 +51,8 @@ module.exports = function (fastify, opts, next) {
     beforeHandler: fastify.auth([
       fastify.authenticate
     ]),
-    handler: userController.delete
+    handler: userController.delete,
+    schema: documentation.deleteUserSchema
   })
 
   fastify.route({
