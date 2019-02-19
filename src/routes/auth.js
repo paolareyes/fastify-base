@@ -1,5 +1,7 @@
 const boom    = require('boom')
     , User    = require('../models/user')
+    // Import Swagger documentation
+    , documentation = require('./documentation/authApi')
 
 module.exports = function (fastify, opts, next) {
   fastify.route({
@@ -10,7 +12,8 @@ module.exports = function (fastify, opts, next) {
     ]),
     handler: async (req, reply) => {
         reply.send(req.user)
-    }
+    },
+    schema: documentation.getCurrentUser
   })
 
   fastify.route({
@@ -30,7 +33,8 @@ module.exports = function (fastify, opts, next) {
         throw boom.boomify(err)
       }
 
-    }
+    },
+    schema: documentation.signUpUser
   })
 
   fastify.route({
@@ -42,13 +46,14 @@ module.exports = function (fastify, opts, next) {
         const user = await User.findOne({email: email, active: true})
         if(user){
           if(user.validPassword(req.body.password, user.password)){
-            user.password = null;
             const token = fastify.jwt.sign({
                 email: user.email
                 , _id: user._id
                 , role: user.role
               })
-            return {token, user: user }
+              reply
+                   .code(200)
+                   .send({ token: token, user: user })
           } else {
             return {error:"Usuario o contraseña incorrecta"}
           }
@@ -60,7 +65,8 @@ module.exports = function (fastify, opts, next) {
       } catch (err) {
         throw boom.boomify(err)
       }
-  }
+  },
+  schema: documentation.signInUser
   })
 
   next()

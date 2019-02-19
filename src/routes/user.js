@@ -2,7 +2,7 @@
 const userController = require('../controllers/user')
 
 // Import Swagger documentation
-      documentation = require('./documentation/userApi')
+    , documentation = require('./documentation/userApi')
 
 module.exports = function (fastify, opts, next) {
   fastify.route({
